@@ -1,4 +1,4 @@
-package connection;
+package com.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,15 +20,15 @@ public class DataConnection {
 	public DataConnection() {}
 	
 	private String nombreBD ;
-	private String url;
-	private Connection con;
-	private Statement st;
-	private ResultSet rs;
-	private String user = "root";
-	private String pass = "";
+	private static String url;
+	private static Connection con;
+	private static Statement st;
+	private static ResultSet rs;
+	private static String user = "root";
+	private static String pass = "";
 	
-	//clase para conectar con la base de datos
-	public Connection conexion() {
+	//metodo para conectar con la base de datos
+	public static Connection conexion() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, user, pass);
@@ -42,7 +42,24 @@ public class DataConnection {
 		
 		return con;
 	}
-
+	
+	
+	//metodo para solicitar un query
+	public static ResultSet getData(String query) {
+		Connection cn = conexion();
+		Statement st;
+		ResultSet data = null;
+		try {
+			st = cn.createStatement();
+			data = st.executeQuery(query);
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
+		return data;
+		
+	}
+	
+	
 	public String getNombreBD() {
 		return nombreBD;
 	}
