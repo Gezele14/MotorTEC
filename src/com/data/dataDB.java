@@ -39,6 +39,25 @@ public class dataDB {
 		
 	}
 
+	public static DefaultTableModel clientes() {
+		DefaultTableModel model = new DefaultTableModel();
+		ResultSet rs = DataConnection.getData("select idcliente, nombre, primerapellido, segundoapellido, telefono from cliente");
+		model.setColumnIdentifiers(new Object[] {"ID","Nombre", "Primer Apellido","Segundo Apellido", "Telefono"});
+		
+		try {
+			while(rs.next()) {
+				model.addRow(new Object[] {rs.getString("idcliente"), 
+											rs.getString("Nombre"), 
+											rs.getString("PrimerApellido"), 
+											rs.getString("SegundoApellido"), 
+											rs.getString("telefono")});}} 
+		
+		catch (SQLException e) {System.out.print(e.toString());}
+		return model;
+		
+	}
+
+	
 	public static DefaultTableModel AutoUsado() {
 		DefaultTableModel model = new DefaultTableModel();
 		ResultSet rs = DataConnection.getData("select idauto, Matricula, Marca.Nombre as Marca, modelo.Nombre as Modelo, Color, Kilometraje\r\n" + 

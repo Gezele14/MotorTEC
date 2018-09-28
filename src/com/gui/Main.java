@@ -98,6 +98,208 @@ public class Main {
 				Inicio.setVisible(true);
 			}
 		});
+		
+		ventas = new JPanel();
+		ventas.setBounds(0, 0, 795, 514);
+		frame.getContentPane().add(ventas);
+		ventas.setVisible(false); 
+		ventas.setLayout(null);
+		
+		@SuppressWarnings("rawtypes")
+		JComboBox comboBox_modelo = new JComboBox();
+		comboBox_modelo.insertItemAt("Todos", 0);
+		comboBox_modelo.setSelectedIndex(0);
+		comboBox_modelo.setBounds(159, 109, 109, 20);
+		ventas.add(comboBox_modelo);
+		
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 151, 775, 316);
+		ventas.add(scrollPane);
+		
+		table = new JTable();
+		table.setFillsViewportHeight(true);
+		table.setModel(com.data.dataDB.Autos());
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed (java.awt.event.MouseEvent Mouse_evt) {
+				JTable table = (JTable) Mouse_evt.getSource();
+				if (Mouse_evt.getClickCount() == 1) {
+					text_idAuto.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+				}
+			}
+		});
+		scrollPane.setViewportView(table);
+		
+		@SuppressWarnings("rawtypes")
+		JComboBox Box_cons = new JComboBox();
+		Box_cons.setBounds(159, 36, 109, 20);
+		ventas.add(Box_cons);
+		
+		@SuppressWarnings("rawtypes")
+		JComboBox Box_estado = new JComboBox(estado_car);
+		Box_estado.insertItemAt("Todos", 0);
+		Box_estado.setSelectedIndex(0);
+		Box_estado.setBounds(311, 109, 109, 20);
+		ventas.add(Box_estado);
+		
+		@SuppressWarnings("rawtypes")
+		JComboBox Box_marca = new JComboBox();
+		Box_marca.insertItemAt("Todos", 0);
+		Box_marca.setSelectedIndex(0);
+		Box_marca.setBounds(10, 109, 109, 20);
+		
+		ventas.add(Box_marca);
+		
+		JLabel lblmarca = new JLabel("Marca:");
+		lblmarca.setBounds(10, 84, 46, 14);
+		ventas.add(lblmarca);
+		
+		JLabel lblModelo = new JLabel("Modelo:");
+		lblModelo.setBounds(159, 84, 46, 14);
+		ventas.add(lblModelo);
+		
+		JLabel lblEstado = new JLabel("Estado:");
+		lblEstado.setBounds(311, 84, 46, 14);
+		ventas.add(lblEstado);
+		
+		JLabel lblCedCliente = new JLabel("Ced. Cliente");
+		lblCedCliente.setBounds(10, 11, 68, 14);
+		ventas.add(lblCedCliente);
+		
+		JLabel lblConcesionaria = new JLabel("Concesionaria");
+		lblConcesionaria.setBounds(159, 11, 89, 14);
+		ventas.add(lblConcesionaria);
+		
+		JLabel lblIdAuto = new JLabel("Id Auto");
+		lblIdAuto.setBounds(311, 11, 46, 14);
+		ventas.add(lblIdAuto);
+		
+		text_idcliente = new JTextField();
+		text_idcliente.setBounds(10, 36, 109, 20);
+		ventas.add(text_idcliente);
+		text_idcliente.setColumns(10);
+		
+		text_idAuto = new JTextField();
+		text_idAuto.setColumns(10);
+		text_idAuto.setBounds(311, 36, 109, 20);
+		ventas.add(text_idAuto);
+		
+		JButton btnGenerarVenta = new JButton("Generar Venta");
+		btnGenerarVenta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (text_idAuto.getText().equals("")) {
+					JOptionPane.showMessageDialog(ventas, "Por favor seleccione un auto", "Sin Auto", JOptionPane.WARNING_MESSAGE);
+				}
+				else if(!text_idcliente.getText().equals("")) {
+					try {
+						//verifica si el id del cliente ya existe en la base de datos
+						if (com.data.dataDB.ifExists("cliente", "idCliente", text_idcliente.getText())) {
+							com.data.dataDB.insertarVenta(Box_cons.getSelectedItem().toString(), text_idcliente.getText(), text_idAuto.getText());
+						}
+						else {
+							int seleccion = JOptionPane.showConfirmDialog(ventas, "El cliente no existe. ¿Desea agregar al cliente: "+text_idcliente.getText()+"?", "Cliente no existe",JOptionPane.YES_NO_OPTION);
+							if(seleccion == 0) {
+								addclient nCliente = new addclient(text_idcliente.getText());
+								nCliente.setVisible(true);
+								nCliente.setAlwaysOnTop(false);
+							}
+							else {
+								text_idcliente.setText("");
+							}
+								
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		btnGenerarVenta.setBounds(460, 35, 116, 23);
+		ventas.add(btnGenerarVenta);
+		
+		JButton btnregistro_Ventas= new JButton("Ventas");
+		btnregistro_Ventas.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnregistro_Ventas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				vendido.setVisible(true);
+				ventas.setVisible(false);
+			}
+		});
+		btnregistro_Ventas.setBounds(633, 35, 109, 94);
+		ventas.add(btnregistro_Ventas);
+		
+		JButton btnInicio = new JButton("Inicio");
+		btnInicio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Inicio.setVisible(true);
+				ventas.setVisible(false);
+			}
+		});
+		
+		JButton btnFiltrar = new JButton("Filtrar");
+		btnFiltrar.setBounds(460, 108, 116, 23);
+		ventas.add(btnFiltrar);
+		
+		btnInicio.setBounds(696, 480, 89, 23);
+		ventas.add(btnInicio);
+		
+		JButton btnMostrarClientes = new JButton("Clientes");
+		btnMostrarClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				table.setModel(com.data.dataDB.clientes());
+			}
+		});
+		btnMostrarClientes.setBounds(460, 69, 116, 29);
+		ventas.add(btnMostrarClientes);
+		
+		btnFiltrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Mostrar todos los autos en la tabla
+				if (Box_marca.getSelectedItem().toString().equals("Todos") &&
+						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
+						Box_estado.getSelectedItem().toString().equals("Todos")) {
+					table.setModel(com.data.dataDB.Autos());
+				}
+				//Mostrar datos de los autos usados
+				else if (Box_marca.getSelectedItem().toString().equals("Todos") &&
+						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
+						Box_estado.getSelectedItem().toString().equals("Usado")) {
+					table.setModel(com.data.dataDB.AutoUsado());
+				}
+				//Mostrar datos de los autos nuevos
+				else if (Box_marca.getSelectedItem().toString().equals("Todos") &&
+						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
+						Box_estado.getSelectedItem().toString().equals("Nuevo")) {
+					table.setModel(com.data.dataDB.AutoNuevo());
+				}
+				//Mostrar datos de los autos con filtro
+				else {
+					table.setModel(com.data.dataDB.AutosFiltro(Box_marca.getSelectedItem().toString(), 
+																comboBox_modelo.getSelectedItem().toString(),
+																Box_estado.getSelectedItem().toString()));
+				}
+				
+			}
+		});
+		
+		Box_marca.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 if(e.getSource() == Box_marca) {
+					 @SuppressWarnings("rawtypes")
+					JComboBox box = (JComboBox)e.getSource();
+					Marca = "'"+(String)box.getSelectedItem()+"'";
+					lista_modelo = com.data.dataDB.llenar_modelo(Marca);
+					comboBox_modelo.removeAllItems();
+					comboBox_modelo.insertItemAt("Todos", 0);
+					comboBox_modelo.setSelectedIndex(0);
+					for (int i = 0; i < lista_modelo.size(); i++) {
+						comboBox_modelo.addItem(lista_modelo.get(i));
+					}
+					
+				 }
+			}
+		});
 		btnInicio2.setBounds(696, 480, 89, 23);
 		reparaciones.add(btnInicio2);
 		
@@ -236,151 +438,6 @@ public class Main {
 		btnMenor.setBounds(677, 36, 89, 23);
 		vendido.add(btnMenor);
 		
-		ventas = new JPanel();
-		ventas.setBounds(0, 0, 795, 514);
-		frame.getContentPane().add(ventas);
-		ventas.setVisible(false); 
-		ventas.setLayout(null);
-		
-		@SuppressWarnings("rawtypes")
-		JComboBox comboBox_modelo = new JComboBox();
-		comboBox_modelo.insertItemAt("Todos", 0);
-		comboBox_modelo.setSelectedIndex(0);
-		comboBox_modelo.setBounds(159, 109, 109, 20);
-		ventas.add(comboBox_modelo);
-		
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 151, 775, 316);
-		ventas.add(scrollPane);
-		
-		table = new JTable();
-		table.setFillsViewportHeight(true);
-		table.setModel(com.data.dataDB.Autos());
-		table.addMouseListener(new MouseAdapter() {
-			public void mousePressed (java.awt.event.MouseEvent Mouse_evt) {
-				JTable table = (JTable) Mouse_evt.getSource();
-				if (Mouse_evt.getClickCount() == 1) {
-					text_idAuto.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-				}
-			}
-		});
-		scrollPane.setViewportView(table);
-		
-		@SuppressWarnings("rawtypes")
-		JComboBox Box_cons = new JComboBox();
-		Box_cons.setBounds(159, 36, 109, 20);
-		ventas.add(Box_cons);
-		
-		@SuppressWarnings("rawtypes")
-		JComboBox Box_estado = new JComboBox(estado_car);
-		Box_estado.insertItemAt("Todos", 0);
-		Box_estado.setSelectedIndex(0);
-		Box_estado.setBounds(311, 109, 109, 20);
-		ventas.add(Box_estado);
-		
-		@SuppressWarnings("rawtypes")
-		JComboBox Box_marca = new JComboBox();
-		Box_marca.insertItemAt("Todos", 0);
-		Box_marca.setSelectedIndex(0);
-		Box_marca.setBounds(10, 109, 109, 20);
-		
-		ventas.add(Box_marca);
-		
-		JLabel lblmarca = new JLabel("Marca:");
-		lblmarca.setBounds(10, 84, 46, 14);
-		ventas.add(lblmarca);
-		
-		JLabel lblModelo = new JLabel("Modelo:");
-		lblModelo.setBounds(159, 84, 46, 14);
-		ventas.add(lblModelo);
-		
-		JLabel lblEstado = new JLabel("Estado:");
-		lblEstado.setBounds(311, 84, 46, 14);
-		ventas.add(lblEstado);
-		
-		JLabel lblCedCliente = new JLabel("Ced. Cliente");
-		lblCedCliente.setBounds(10, 11, 68, 14);
-		ventas.add(lblCedCliente);
-		
-		JLabel lblConcesionaria = new JLabel("Concesionaria");
-		lblConcesionaria.setBounds(159, 11, 89, 14);
-		ventas.add(lblConcesionaria);
-		
-		JLabel lblIdAuto = new JLabel("Id Auto");
-		lblIdAuto.setBounds(311, 11, 46, 14);
-		ventas.add(lblIdAuto);
-		
-		text_idcliente = new JTextField();
-		text_idcliente.setBounds(10, 36, 109, 20);
-		ventas.add(text_idcliente);
-		text_idcliente.setColumns(10);
-		
-		text_idAuto = new JTextField();
-		text_idAuto.setColumns(10);
-		text_idAuto.setBounds(311, 36, 109, 20);
-		ventas.add(text_idAuto);
-		
-		JButton btnGenerarVenta = new JButton("Generar Venta");
-		btnGenerarVenta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (text_idAuto.getText().equals("")) {
-					JOptionPane.showMessageDialog(ventas, "Por favor seleccione un auto", "Sin Auto", JOptionPane.WARNING_MESSAGE);
-				}
-				else if(!text_idcliente.getText().equals("")) {
-					try {
-						//verifica si el id del cliente ya existe en la base de datos
-						if (com.data.dataDB.ifExists("cliente", "idCliente", text_idcliente.getText())) {
-							com.data.dataDB.insertarVenta(Box_cons.getSelectedItem().toString(), text_idcliente.getText(), text_idAuto.getText());
-						}
-						else {
-							int seleccion = JOptionPane.showConfirmDialog(ventas, "El cliente no existe. ¿Desea agregar al cliente: "+text_idcliente.getText()+"?", "Cliente no existe",JOptionPane.YES_NO_OPTION);
-							if(seleccion == 0) {
-								addclient nCliente = new addclient(text_idcliente.getText());
-								nCliente.setVisible(true);
-								nCliente.setAlwaysOnTop(false);
-							}
-							else {
-								text_idcliente.setText("");
-							}
-								
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		btnGenerarVenta.setBounds(460, 35, 116, 23);
-		ventas.add(btnGenerarVenta);
-		
-		JButton btnregistro_Ventas= new JButton("Ventas");
-		btnregistro_Ventas.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnregistro_Ventas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				vendido.setVisible(true);
-				ventas.setVisible(false);
-			}
-		});
-		btnregistro_Ventas.setBounds(633, 35, 109, 94);
-		ventas.add(btnregistro_Ventas);
-		
-		JButton btnInicio = new JButton("Inicio");
-		btnInicio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Inicio.setVisible(true);
-				vendido.setVisible(false);
-			}
-		});
-		
-		JButton btnFiltrar = new JButton("Filtrar");
-		btnFiltrar.setBounds(460, 108, 116, 23);
-		ventas.add(btnFiltrar);
-		
-		btnInicio.setBounds(696, 480, 89, 23);
-		ventas.add(btnInicio);
-		
 		Inicio = new JPanel();
 		Inicio.setBackground(Color.WHITE);
 		Inicio.setBounds(0, 0, 795, 514);
@@ -426,36 +483,6 @@ public class Main {
 		fondo.setBounds(0, 0, 806, 514);
 		Inicio.add(fondo);
 		
-		btnFiltrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//Mostrar todos los autos en la tabla
-				if (Box_marca.getSelectedItem().toString().equals("Todos") &&
-						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
-						Box_estado.getSelectedItem().toString().equals("Todos")) {
-					table.setModel(com.data.dataDB.Autos());
-				}
-				//Mostrar datos de los autos usados
-				else if (Box_marca.getSelectedItem().toString().equals("Todos") &&
-						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
-						Box_estado.getSelectedItem().toString().equals("Usado")) {
-					table.setModel(com.data.dataDB.AutoUsado());
-				}
-				//Mostrar datos de los autos nuevos
-				else if (Box_marca.getSelectedItem().toString().equals("Todos") &&
-						comboBox_modelo.getSelectedItem().toString().equals("Todos") &&
-						Box_estado.getSelectedItem().toString().equals("Nuevo")) {
-					table.setModel(com.data.dataDB.AutoNuevo());
-				}
-				//Mostrar datos de los autos con filtro
-				else {
-					table.setModel(com.data.dataDB.AutosFiltro(Box_marca.getSelectedItem().toString(), 
-																comboBox_modelo.getSelectedItem().toString(),
-																Box_estado.getSelectedItem().toString()));
-				}
-				
-			}
-		});
-		
 		ArrayList<String> lista_marca =  new ArrayList<String>();
 		lista_marca = com.data.dataDB.llenar_combo("marca", "Nombre");
 		for (int i = 0; i < lista_marca.size(); i++) {
@@ -470,24 +497,6 @@ public class Main {
 		for (int i = 0; i < conces.size(); i++) {
 			Box_cons.addItem(conces.get(i));
 		}
-		
-		Box_marca.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 if(e.getSource() == Box_marca) {
-					 @SuppressWarnings("rawtypes")
-					JComboBox box = (JComboBox)e.getSource();
-					Marca = "'"+(String)box.getSelectedItem()+"'";
-					lista_modelo = com.data.dataDB.llenar_modelo(Marca);
-					comboBox_modelo.removeAllItems();
-					comboBox_modelo.insertItemAt("Todos", 0);
-					comboBox_modelo.setSelectedIndex(0);
-					for (int i = 0; i < lista_modelo.size(); i++) {
-						comboBox_modelo.addItem(lista_modelo.get(i));
-					}
-					
-				 }
-			}
-		});
 		
 		Box_selecfiltro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

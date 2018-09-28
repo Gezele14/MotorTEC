@@ -115,6 +115,8 @@ public class addrepar extends JDialog {
 											 text_idMecanico.getText());
 								}
 									
+								setVisible(false);
+								dispose();
 								
 							}
 							else {
