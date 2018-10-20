@@ -1,7 +1,7 @@
 # MotorTEC
 
-Bases de Datos\n
-Primer proyecto II Semestre 2018 | TEC
+Bases de Datos.
+Primer proyecto II Semestre 2018 | TEC.
 
 ## Estudiantes:
 
