@@ -6,6 +6,6 @@ Primer proyecto II Semestre 2018 | TEC
 ## Estudiantes:
 
 * Juan Ezquivel.
-* David Román
-*	Gerardo Zeledón
+* David Román.
+*	Gerardo Zeledón.
 
