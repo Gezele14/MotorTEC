@@ -3,7 +3,7 @@
 Bases de Datos
 Primer proyecto II Semestre 2018 | TEC
 
-##Estudiantes:
+## Estudiantes:
 
 * Juan Ezquivel.
 * David Román
